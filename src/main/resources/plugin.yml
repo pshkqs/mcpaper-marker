@@ -1,0 +1,19 @@
+name: Marker
+version: ${project.version}
+main: github.pashamaladec.marker.Marker
+api-version: 1.16
+authors: [ pashamaladec ]
+
+commands:
+  mark:
+    description: Сохраняет точку
+    usage: /mark название
+
+  rmark:
+    description: Удаляет точку
+    usage: /rmark id
+
+  marks:
+    description: Показывает сохранённые точки
+    usage: /marks
+

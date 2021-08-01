@@ -1,5 +1,6 @@
 package github.pashamaladec.marker.config;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.NumberConversions;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MarkData implements ConfigurationSerializable
+public class Mark implements ConfigurationSerializable
 {
 	public String author;
 	public String uuid;
@@ -19,7 +20,13 @@ public class MarkData implements ConfigurationSerializable
 	public int y;
 	public int z;
 	
-	public MarkData(String author, String uuid, String created, String name, String enviroment, String world, int x, int y, int z)
+	private static final Map<String, String> russianWorlds = Map.ofEntries(
+			Map.entry("NORMAL", "обычном мире"),
+			Map.entry("NETHER", "нижнем мире"),
+			Map.entry("THE_END", "в энде")
+	);
+	
+	public Mark(String author, String uuid, String created, String name, String enviroment, String world, int x, int y, int z)
 	{
 		this.author = author;
 		this.uuid = uuid;
@@ -32,9 +39,18 @@ public class MarkData implements ConfigurationSerializable
 		this.z = z;
 	}
 	
-	public MarkData()
+	public String getFirstLine()
 	{
+		return ChatColor.AQUA + name
+				+ ChatColor.GRAY + " x: " + ChatColor.WHITE + x
+				+ ChatColor.GRAY + " y: " + ChatColor.WHITE + y
+				+ ChatColor.GRAY + " z: " + ChatColor.WHITE + z
+				+ ChatColor.GRAY + " в " + ChatColor.WHITE + russianWorlds.get(enviroment);
+	}
 	
+	public String getSecondLine()
+	{
+		return ChatColor.GRAY + "       создал " + author + " в " + created;
 	}
 	
 	@Override
@@ -54,9 +70,9 @@ public class MarkData implements ConfigurationSerializable
 		return serialized;
 	}
 	
-	public static MarkData deserialize(Map<?, ?> serialized)
+	public static Mark deserialize(Map<?, ?> serialized)
 	{
-		return new MarkData(
+		return new Mark(
 				serialized.get("author").toString(),
 				serialized.get("uuid").toString(),
 				serialized.get("created").toString(),
@@ -66,6 +82,6 @@ public class MarkData implements ConfigurationSerializable
 				NumberConversions.toInt(serialized.get("x")),
 				NumberConversions.toInt(serialized.get("y")),
 				NumberConversions.toInt(serialized.get("z"))
-				);
+		);
 	}
 }

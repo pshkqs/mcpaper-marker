@@ -3,17 +3,17 @@ version: ${project.version}
 main: github.pashamaladec.marker.Marker
 api-version: 1.16
 authors: [ pashamaladec ]
+prefix: Marker
 
 commands:
-  mark:
+  setmark:
     description: Сохраняет точку
-    usage: /mark название
+    usage: "/setmark [название: строка]"
 
-  rmark:
-    description: Удаляет точку
-    usage: /rmark id
+  removemark:
+    description: Удаляет указанную точку
+    usage: "/removemark [ид: строка]"
 
-  marks:
+  showmarks:
     description: Показывает сохранённые точки
-    usage: /marks
 

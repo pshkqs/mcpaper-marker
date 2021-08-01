@@ -2,48 +2,53 @@ package github.pashamaladec.marker.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static github.pashamaladec.marker.Marker.log;
 
 public class Config
 {
-	private Logger logger = null;
-	
 	private final File file;
 	private FileConfiguration configuration;
 	
-	public Config(JavaPlugin self, String name, Logger logger)
+	public Config(String path)
 	{
-		file = new File(self.getDataFolder().getParent(), name);
-		this.logger = logger;
+		file = new File(path);
 	}
 	
 	public FileConfiguration getConfig()
 	{
 		if (configuration == null)
-		{
 			throw new NullPointerException();
-		}
 		
 		return configuration;
 	}
 	
+	public boolean exists()
+	{
+		if(file.exists())
+			log(Level.INFO, "File " + file.getName() + " exists");
+		else
+			log(Level.WARNING, "File " + file.getName() + " NOT exists");
+		
+		return file.exists();
+	}
+	
 	public boolean create()
 	{
+		log(Level.INFO, "Creating yaml-configuration: " + file.getName());
+		
 		try
 		{
-			var success = file.createNewFile();
-			load();
-			
-			return success;
-			
+			var created = file.createNewFile();
+			log(Level.INFO, "Yaml-configuration created: " + file.getAbsolutePath());
+			return created;
 		} catch (IOException e)
 		{
-			logger.log(Level.SEVERE, file.getName() + " couldn't create, " + file.getAbsolutePath() + ", " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return false;
@@ -53,13 +58,12 @@ public class Config
 	{
 		if (file.isFile() == false)
 		{
-			logger.log(Level.SEVERE, file.getAbsolutePath() + " is not a file");
+			log(Level.WARNING, file.getAbsolutePath() + " is not a file\nCAN'T LOAD");
 			return false;
 		}
 		
 		configuration = YamlConfiguration.loadConfiguration(file);
-		logger.log(Level.INFO, "Loaded config " + file.getName());
-		
+		log(Level.INFO, "Loaded config " + file.getName());
 		return true;
 	}
 	
@@ -70,9 +74,10 @@ public class Config
 			configuration.save(file);
 		} catch (IOException e)
 		{
-			logger.log(Level.SEVERE, file.getName() + " couldn't save");
+			log(Level.WARNING, file.getName() + " couldn't save");
+			return;
 		}
 		
-		logger.log(Level.INFO, "Saved config " + file.getName());
+		log(Level.INFO, "Saved config " + file.getName());
 	}
 }
